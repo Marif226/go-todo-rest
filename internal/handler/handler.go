@@ -1,12 +1,15 @@
 package handler
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/Marif226/go-todo-rest/internal/service"
+	"github.com/labstack/echo/v4"
+)
 
 type Handler struct {
-
+	services *service.Service
 }
 
-func New() *Handler {
+func New(services *service.Service) *Handler {
 	return &Handler{
 		
 	}
