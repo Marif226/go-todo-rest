@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/Marif226/go-todo-rest/internal/handler"
@@ -9,18 +8,22 @@ import (
 	"github.com/Marif226/go-todo-rest/internal/service"
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
 func main() {
+	// set format for logger
+	logrus.SetFormatter(new(logrus.JSONFormatter))
+
 	err := initConfig()
 	if err != nil {
-		log.Fatalf("error during reading the config file, %s", err.Error())
+		logrus.Fatalf("error during reading the config file, %s", err.Error())
 	}
 
 	err = godotenv.Load()
 	if err != nil {
-		log.Fatalf("error during loading .env variable, %s", err.Error())
+		logrus.Fatalf("error during loading .env variable, %s", err.Error())
 	}
 
 	db, err := repository.NewPostgresDB(repository.Config{
@@ -33,7 +36,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("error during connecting to the database, %s", err.Error())
+		logrus.Fatalf("error during connecting to the database, %s", err.Error())
 	}
 
 	r := repository.New(db)
@@ -46,7 +49,7 @@ func main() {
 	// err := srv.Run("8080", h.InitRoutes())
 	err = e.Start(viper.GetString("port"))
 	if err != nil {
-		log.Fatalf("error during running http server, %s", err.Error())
+		logrus.Fatalf("error during running http server, %s", err.Error())
 	}
 }
 

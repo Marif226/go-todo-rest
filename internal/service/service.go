@@ -1,9 +1,12 @@
 package service
 
-import "github.com/Marif226/go-todo-rest/internal/repository"
+import (
+	"github.com/Marif226/go-todo-rest/internal/model"
+	"github.com/Marif226/go-todo-rest/internal/repository"
+)
 
 type Authorization interface {
-
+	CreateUser(user model.User) (int, error)
 }
 
 type TodoList interface {
@@ -22,6 +25,7 @@ type Service struct {
 
 func New(repository *repository.Repository) *Service {
 	return &Service{
-
+		Authorization: NewAuthService(repository.Authorization),
 	}
 }
+
