@@ -12,21 +12,37 @@ func (h *Handler) signUp(ctx echo.Context) error {
 
 	err := ctx.Bind(&inputUser)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
 	id, err := h.services.Authorization.CreateUser(inputUser)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
 	}
 
-	ctx.JSON(http.StatusOK, echo.Map{
+	err = ctx.JSON(http.StatusOK, echo.Map{
 		"id" : id,
 	})
 
-	return nil
+	return err
 }
 
 func (h *Handler) signIn(ctx echo.Context) error {
-	return nil
+	var inputUser model.UserDTO
+
+	err := ctx.Bind(&inputUser)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	token, err := h.services.Authorization.GenerateToken(inputUser.Username, inputUser.Password)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err)
+	}
+
+	err = ctx.JSON(http.StatusOK, echo.Map{
+		"token" : token,
+	})
+
+	return err
 }
