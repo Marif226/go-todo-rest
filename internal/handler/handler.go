@@ -15,9 +15,7 @@ func New(services *service.Service) *Handler {
 	}
 }
 
-func (h *Handler) InitRoutes() *echo.Echo {
-	router := echo.New()
-
+func (h *Handler) InitRoutes(router *echo.Echo) {
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
@@ -44,6 +42,4 @@ func (h *Handler) InitRoutes() *echo.Echo {
 			}
 		}
 	}
-
-	return router
 }
